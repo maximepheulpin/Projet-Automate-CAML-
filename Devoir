@@ -1,0 +1,204 @@
+Prince-Marcel :
+Maxime : 
+Antoine :
+
+PARTIE 1 : Mode d'emploi 
+	Module MAIN:
+
+	  val trouver_char : delta*etat -> char
+	  	retourne le caractère selon l'etat source en fonction de la fonction de transition delta.
+
+	  val nouveau_etat : transition -> etat 
+		retourne l'etat cible selon une fonction de transition passée en parametre.
+
+	  val retourner_transition : delta*char -> transition
+	  	retourne la transition selon le caractère en fonction de la fonction de transition delta.
+
+	  val actualiser : transition*delta -> delta
+		retourne la liste des transitions sans la transition passée en parametre.
+	  	
+	  val concat : 'a list -> 'a list -> 'a list
+	  	retourne une liste de type polymorphe issue d'une concaténation de deux listes polymhorphes sans doublons 
+
+	  val random : int * q -> etat
+	  	retourne aléatoirement un etat n'appartenant pas à l'ensembles fini d'état q. 
+
+	  val est_correct : aef -> bool
+	  	retourne un bool true si l'automate est correct sinon false
+
+	  val est_complet : aef -> bool
+	  	retourne un bool true si l'automate est complet sinon false
+
+	  val completer : aef -> aef
+	  	retourne un automate complété
+
+	  val langage_vide : aef -> bool
+	  	retourne un bool true si le language de l'automate est vide sinon false
+
+	  val est_deterministe : aef -> bool
+	  	retourne un bool true si l'automate est détérministe sinon false
+
+	  val lecture_car : transition -> int -> char option
+	  	retourne le caractère de type option selon l'etat source en fonction de la fonction de transition delta. 
+
+	  val lecture_mot : delta*etat -> string
+	  	retourne le mot selon une fonction de transition et un état
+
+	  val accepter_mot : string*aef -> bool 
+	    	retourne un bool true si le mot est accépté dans l'automate sinon false 
+	 
+	  val union : aef -> aef -> aef
+	  	retourne l'union de deux automates
+
+	  val reco_union : aef -> aef -> aef
+	  	retourne un automate qui est la concaténation de deux automates
+
+	  val afficher : aef -> unit
+	  	affiche la fonction de transition d'un automate
+	  	
+  	
+Le code est divisé en deux parties :
+	-Une signature nommée AEF
+		-Tous les types et fonctions principales et auxiliaires sont déclarés
+	-Un module main contennant les définitions des types et des fonctions
+		-Il y a certaines fonctions qui ont des fonction imbriqués .Il n'y a donc pas nécéssités de les déclarer dans la signature AEF 				car elles sont utilisées à usage unique.
+
+
+
+PARTIE 2 : REPARTITION DU TRAVAIL 
+
+Antoine : Q1-Q5 
+Prince : Q1-Q5 ; Q10-Q12
+Maxime : Q1-Q9 
+
+Ceci n'est qu'une vulgarisation de la manière dont a été reparti le travail car en realité nous avons tous travailler sur les differentes partis enfin de realiser des mutualisations de code et d'obtenir des fonctions optimisées et fonctionnelles.
+
+
+
+
+PARTIE 3 : DESCRIPTIONS BREVES DES FONCTIONS 
+
+
+
+
+(* QUESTION 1 *)
+
+Définition des types utilisés dans notre automate avec implémentation de quelques exemples nous permettant de tester par la suite le fonctionnement de l'ensemble des fonctionnalités.
+
+
+
+(* QUESTION 2 *) 
+
+
+est_sous_ensembles : f -> q -> bool: Cette fonction prend deux listes d'entiers e' et e, et vérifie si e' est un sous-ensemble de e. Elle utilise la fonction List.mem pour vérifier si chaque élément de e' est présent dans e.
+
+recherche : transition list -> etat -> bool: Cette fonction prend une liste de transitions list et un état elt en argument, et recherche si elt est présent dans les états de départ ou d'arrivée des transitions de list. Elle utilise une correspondance de motifs pour extraire les éléments des transitions et comparer avec elt.
+
+test : delta -> q -> bool: Cette fonction prend une liste de transitions delta et une liste d'états q en argument, et vérifie si tous les états de q sont présents dans les transitions de delta en tant qu'états de départ ou d'arrivée. Elle utilise la fonction recherche pour effectuer cette vérification de manière récursive sur chaque élément de q.
+
+est_correct : aef -> bool: Cette fonction prend un automate a en argument, et vérifie si les conditions pour qu'il soit considéré comme correct sont remplies. Ces conditions sont que l'alphabet de a ne soit pas vide, que les états acceptants de a soient un sous-ensemble des états finis de a, et que tous les états de a soient présents dans les transitions de a en tant qu'états de départ ou d'arrivée. Elle utilise les fonctions est_sous_ensembles et test pour effectuer ces vérifications.
+
+
+
+(* QUESTION 3 *)
+
+
+est_complet : aef -> bool: Cette fonction prend un automate a en argument, et vérifie si a est complet, c'est-à-dire si chaque symbole de l'alphabet de a est utilisé au moins une fois dans les transitions de a. Elle utilise les fonctions est_present et recherche_char pour effectuer cette vérification. 
+
+sont_present : Cette fonction prend en entrée un caractère c et une liste de transitions d (représentée comme delta), et vérifie si c est présent en tant que symbole de transition dans d. Elle le fait en itérant de manière récursive à travers la liste de transitions d et en vérifiant si b1, qui représente le symbole de transition, est égal à c. Si c est trouvé dans l'une des transitions, la fonction renvoie true, sinon elle renvoie false.
+
+
+(* QUESTION 4 *)
+
+
+
+
+recherche_char : Cette fonction prend en entrée une liste de caractères alpha (représentée comme alpha) et une liste de transitions del (représentée comme delta), et recherche un caractère dans alpha qui n'est pas présent en tant que symbole de transition dans del. Elle le fait en itérant de manière récursive à travers la liste de caractères alpha et en vérifiant si chaque caractère est présent en tant que symbole de transition dans del en utilisant la fonction est_present. Si un caractère n'est pas trouvé dans l'une des transitions, il est renvoyé en tant que résultat. Si tous les caractères de alpha sont présents en tant que symboles de transition dans del, un caractère d'espace ' ' est renvoyé.
+
+ajout : Cette fonction prend un tuple (list, elt) en entrée et ajoute elt au début de la liste list en utilisant l'opérateur cons ::. Si list est vide, elle renvoie une nouvelle liste contenant uniquement elt. Sinon, elle renvoie une nouvelle liste avec elt ajouté au début.
+
+ajout_transition : Cette fonction prend un tuple (list, etat, char) en entrée et ajoute une transition (etat, char, etat) à la liste de transitions list. Elle le fait en utilisant l'opérateur cons :: pour ajouter le tuple (etat, char, etat) au début de list. Cette fonction met à jour a pour le rendre complet, s'il ne l'est pas déjà. Elle le fait en calculant d'abord le numéro d'état disponible à l'aide de la fonction nv_etat, puis en recherchant un caractère non présent en tant que symbole de transition dans a.alphabet à l'aide de la fonction recherche_char. Ensuite, elle utilise les fonctions ajout et ajout_transition pour ajouter le numéro d'état et le caractère trouvés aux listes d'états finaux et de transitions de a, respectivement. Enfin, elle renvoie a mis à jour avec les nouvelles transitions et états finaux.
+
+
+
+(* QUESTION 5 *)
+
+
+langage_vide : aef -> bool = Cette fonction vérifie si l'automate fini déterministe donné en entrée a une application vide ou des états acceptants vides, ce qui impliquerait que le langage accepté par cet automate est vide.
+
+
+
+(* QUESTION 6 *)
+
+
+let est_deterministe : aef -> bool = Cette fonction vérifie si l'automate a donné en entrée est déterministe en vérifiant s'il y a des transitions ambiguës avec le même caractère d'entrée à partir d'un même état. Si aucune ambiguïté n'est trouvée, alors l'automate est considéré comme déterministe et la fonction renvoie true, sinon elle renvoie false.
+
+
+
+(* QUESTION 7 *)
+
+
+let rec lecture_car : transition -> int -> char option = Cette fonction récursive appelée lecture_car qui prend en entrée une transition (représentée par le type transition) et un entier etat, et renvoie une option de caractère (char option). La fonction recherche dans la transition si l'état donné correspond à un état de départ de la transition, et si c'est le cas, elle renvoie le caractère associé à cette transition sous forme de Some c, sinon elle renvoie None.
+
+
+
+
+(* QUESTION 8 *)
+
+
+
+let lecture_mot : delta*etat -> string = Cette fonction prend en entrée un delta (représenté par le type delta) et un état initial et (représenté par le type etat), et renvoie une chaîne de caractères (string). La fonction utilise une fonction auxiliaire récursive aux pour parcourir l'automate en utilisant les autres fonctions déjà définies, telles que parcours, return, lecture_car, actualise et nvetat. La fonction aux effectue une lecture du mot à partir de l'état initial et en suivant les transitions appropriées dans l'automate jusqu'à ce qu'elle atteigne un état final, en construisant la chaîne de caractères résultante acc à partir des caractères de transition vl obtenus lors de la lecture du mot. La fonction renvoie ensuite la chaîne de caractères complète représentant le mot lu à partir de l'automate.
+
+
+
+(* QUESTION 9 *)
+
+
+La fonction accepter_mot utilise une fonction auxiliaire liste_mots_acceptants pour générer la liste de tous les mots acceptés par l'automate aef, en partant de l'état initial a.q0 de l'automate et en parcourant les transitions en fonction des caractères de mot.
+
+La fonction liste_mots_acceptants utilise plusieurs fonctions auxiliaires pour effectuer les opérations nécessaires. Voici un aperçu des principales étapes du code :
+
+    trouver_char(l,e) : Cette fonction recherche le caractère vl dans la liste l des transitions à partir de l'état e dans l'automate.
+
+    retourner_transition (l,vl) : Cette fonction retourne la transition correspondante à partir de la liste l en utilisant le caractère vl.
+
+    lecture_car r e : Cette fonction renvoie le caractère de la transition r à partir de l'état e de l'automate.
+
+    nouveau_etat (retourner_transition (l,der (Char.escaped (char_of_option c)))) : Cette fonction renvoie le nouvel état résultant de la transition retourner_transition (l,der (Char.escaped (char_of_option c))) à partir de l'état e de l'automate.
+
+    aux(actualiser(r,l),nouveau_etat r,ae,acc^(Char.escaped(vl)),nv::liste,cpt+1) : Cette fonction auxiliaire récursive parcourt les transitions de l'automate en mettant à jour l'état courant e, la liste l des transitions, l'accumulateur acc qui contient les caractères du mot accepté jusqu'à présent, la liste liste des mots acceptés trouvés jusqu'à présent, et le compteur cpt du nombre de transitions parcourues.
+
+    List.mem mot (liste_mots_acceptants (a.application,a.q0,a)) : Enfin, la fonction accepter_mot vérifie si le mot mot se trouve dans la liste des mots acceptés générée par la fonction liste_mots_acceptants à partir de l'automate aef. Si oui, elle retourne true, sinon elle retourne false.
+
+
+
+(* QUESTION 10 *)
+
+
+union : aef -> aef -> aef = Cette fonction prend en entrée deux AEF (a et a') et réalise leur union pour former un nouvel AEF. Elle concatène les alphabets, les ensembles finis d'états, les applications, et les états acceptants des deux AEFs pour former le nouvel AEF. Elle utilise la fonction concat pour concaténer les listes sans duplications, et la fonction random pour générer un état initial unique pour le nouvel AEF. Le nouvel AEF ainsi formé est retourné comme résultat.
+
+
+
+(* QUESTION 11 *)
+
+
+x_n : transition -> delta -> delta -> delta = Cette fonction prend une transition et deux ensembles de transitions delta en entrée, ainsi qu'un accumulateur acc, et renvoie un nouvel ensemble de transitions delta. Elle utilise une approche récursive pour parcourir l'ensemble de transitions l' et construire un nouvel ensemble de transitions en ajoutant les transitions de l' dans acc tout en appliquant une fonction de transition x_n sur chaque transition.
+
+concat_transition : delta -> delta -> delta -> delta = Cette fonction prend deux ensembles de transitions delta en entrée, ainsi qu'un accumulateur acc, et renvoie un nouvel ensemble de transitions delta. Elle utilise une approche récursive pour parcourir l'ensemble de transitions l1 et construire un nouvel ensemble de transitions en ajoutant les résultats de la fonction x_n appliquée sur chaque transition de l1 dans acc.
+
+
+reco_union : aef -> aef -> aef = Cette fonction prend deux automates finis déterministes (AEF) a et a' en entrée, et renvoie un nouvel AEF en sortie. Elle construit un nouvel AEF en concaténant les alphabets, les ensembles finis d'états, et les ensembles de transitions des deux AEFs d'entrée en utilisant les fonctions concat et x_n. Elle met à jour également l'état initial q0_ et l'ensemble d'états acceptants union_acceptants en fonction des états acceptants de a'.
+
+
+
+(* QUESTION 12 *) 
+
+
+afficher : aef -> unit = Cette fonction prend un automate fini déterministe (AEF) q en entrée et n'a pas de valeur de retour (unit). Elle affiche les transitions de l'ensemble de transitions q.application sous forme de chaînes de caractères dans la sortie standard et pour ce faire elle utilise plusieurs fonctions auxiliares comme :
+
+aux : string -> delta -> string = une fonction récursive interne à la fonction afficher qui prend en entrée une chaîne de caractères acc et un ensemble de transitions delta et renvoie une nouvelle chaîne de caractères construite en parcourant les transitions de delta et en les ajoutant à acc sous forme de chaînes de caractères formatées. La chaîne de caractères formatée pour chaque transition est construite en concaténant la représentation sous forme de chaînes de caractères des états de départ, de l'alphabet utilisé pour la transition (converti en caractère échappé), et de l'état d'arrivée, séparés par des flèches et des parenthèses.
+
+
+
+
+
